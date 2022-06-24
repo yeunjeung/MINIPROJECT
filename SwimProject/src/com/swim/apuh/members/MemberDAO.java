@@ -6,27 +6,27 @@ import java.util.List;
 
 import com.swim.apuh.commom.DAO;
 
-public class MemberDAO extends DAO{
-	
-	//싱글톤
+public class MemberDAO extends DAO {
+
+	// 싱글톤
 	private static MemberDAO mDAO = null;
-	
-	private MemberDAO() {}
-	
+
+	private MemberDAO() {
+	}
+
 	public static MemberDAO getInstance() {
-		if(mDAO == null) {
+		if (mDAO == null) {
 			mDAO = new MemberDAO();
 		}
 		return mDAO;
 	}
-	//CRUD
-	
-	
-	//정보등록(insert)
+	// CRUD
+
+	// 정보등록(insert)
 	public void insert(Member member) {
 		try {
 			connect();
-			String sql = "INSERT INTO members VALUES(?,?,?,?,?,?)";
+			String sql = "INSERT INTO members VALUES(?,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getMemberId());
 			pstmt.setString(2, member.getMemberName());
@@ -34,21 +34,23 @@ public class MemberDAO extends DAO{
 			pstmt.setDate(4, member.getMemberBirth());
 			pstmt.setString(5, member.getMemberAddr());
 			pstmt.setInt(6, member.getMemberCall());
-			
+			pstmt.setString(7, member.getMemberPwd());
+
 			int result = pstmt.executeUpdate();
-			if(result > 0 ){
+			if (result > 0) {
 				System.out.println("정상적으로 등록되었습니다.");
-				
-			}else {
+
+			} else {
 				System.out.println("정상적으로 등록되지 않았습니다.");
 			}
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			disconnect();
 		}
 	}
-	//주소 update
+
+	// 주소 update
 	public void updateAddr(Member member) {
 		try {
 			connect();
@@ -56,21 +58,22 @@ public class MemberDAO extends DAO{
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getMemberAddr());
 			pstmt.setString(2, member.getMemberId());
-		
+
 			int result = pstmt.executeUpdate();
-			
-			if(result > 0) {
+
+			if (result > 0) {
 				System.out.println("주소가 수정되었습니다.");
-				
-			}else {
+
+			} else {
 				System.out.println("정상적으로 수정되지 않았습니다.");
 			}
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			disconnect();
 		}
 	}
+
 	// 연락처 update
 	public void updateCall(Member member) {
 		try {
@@ -79,54 +82,55 @@ public class MemberDAO extends DAO{
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setInt(1, member.getMemberCall());
 			pstmt.setString(2, member.getMemberId());
-			
+
 			int result = pstmt.executeUpdate();
-			
-			if(result > 0) {
+
+			if (result > 0) {
 				System.out.println("전화번호가 수정되었습니다.");
-			}else {
+			} else {
 				System.out.println("정상적으로 ");
 			}
-		}catch(SQLException e) {
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			disconnect();
 		}
 	}
-	//회원삭제 delete
+
+	// 회원삭제 delete
 	public void delete(String memberId) {
 		try {
 			connect();
 			String sql = "DELETE FROM members WHERE member_id = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, memberId);
-			
+
 			int result = pstmt.executeUpdate();
-			
-			if(result > 0) {
+
+			if (result > 0) {
 				System.out.println("삭제되었습니다.");
-			}else {
+			} else {
 				System.out.println("삭제할 수 없습니다.");
 			}
-			
-		}catch(SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
-			
-		}finally {
+
+		} finally {
 			disconnect();
 		}
 	}
-	//전체조회
-	
-	public List<Member> selectAll(){
+	// 전체조회
+
+	public List<Member> selectAll() {
 		List<Member> list = new ArrayList<Member>();
-		
+
 		try {
 			connect();
 			String sql = "SELECT * FROM members ORDER BY member_id";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
-			while(rs.next()) {
+			while (rs.next()) {
 				Member mb = new Member();
 				mb.setMemberId(rs.getString("member_id"));
 				mb.setMemberName(rs.getString("member_name"));
@@ -134,39 +138,45 @@ public class MemberDAO extends DAO{
 				mb.setMemberBirth(rs.getDate("member_birth"));
 				mb.setMemberAddr(rs.getString("member_addr"));
 				mb.setMemberCall(rs.getInt("member_call"));
+				mb.setMemberPwd(rs.getString("member_pwd"));
 			}
-		
-		}catch (SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} finally {
 			disconnect();
 		}
 		return list;
 	}
-	//단건조회 - 회원아이디
+
+	// 단건조회 - 회원아이디
 	public Member selectOne(String memberId) {
-		Member mb = null;	//<null : 없는회원
+		Member mb = null; // <null : 없는회원
 		try {
 			connect();
 			String sql = "SELECT * FROM member WHERE member_id = " + memberId;
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
-			mb = new Member();
-			mb.setMemberId(rs.getString("member_id"));
-			mb.setMemberName(rs.getString("member_name"));
-			mb.setMemberGender(rs.getString("member_gender"));
-			mb.setMemberBirth(rs.getDate("member_birth"));
-			mb.setMemberAddr(rs.getString("member_addr"));
-			mb.setMemberCall(rs.getInt("member_call"));
+				mb = new Member();
+				mb.setMemberId(rs.getString("member_id"));
+				mb.setMemberName(rs.getString("member_name"));
+				mb.setMemberGender(rs.getString("member_gender"));
+				mb.setMemberBirth(rs.getDate("member_birth"));
+				mb.setMemberAddr(rs.getString("member_addr"));
+				mb.setMemberCall(rs.getInt("member_call"));
+				mb.setMemberPwd(rs.getString("member_pwd"));
 			}
-		
-		}catch(SQLException e) {
+
+		} catch (SQLException e) {
 			e.printStackTrace();
-		}finally {
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+
 			disconnect();
 		}
 		return mb;
 	}
-	
+
 }

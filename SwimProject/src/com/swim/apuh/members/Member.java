@@ -2,6 +2,12 @@ package com.swim.apuh.members;
 
 import java.sql.Date;
 
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
+@Getter
+@Setter
+@ToString
 public class Member {
 
 	private String memberId;
@@ -10,44 +16,8 @@ public class Member {
 	private Date memberBirth;
 	private String memberAddr;
 	private int memberCall;
+	private String memberPwd;
 	
-	
-	public String getMemberId() {
-		return memberId;
-	}
-	public void setMemberId(String memberId) {
-		this.memberId = memberId;
-	}
-	public String getMemberName() {
-		return memberName;
-	}
-	public void setMemberName(String memberName) {
-		this.memberName = memberName;
-	}
-	public String getMemberGender() {
-		return memberGender;
-	}
-	public void setMemberGender(String memberGender) {
-		this.memberGender = memberGender;
-	}
-	public Date getMemberBirth() {
-		return memberBirth;
-	}
-	public void setMemberBirth(Date memberBirth) {
-		this.memberBirth = memberBirth;
-	}
-	public String getMemberAddr() {
-		return memberAddr;
-	}
-	public void setMemberAddr(String memberAddr) {
-		this.memberAddr = memberAddr;
-	}
-	public int getMemberCall() {
-		return memberCall;
-	}
-	public void setMemberCall(int memberCall) {
-		this.memberCall = memberCall;
-	}
 	
 	
 }

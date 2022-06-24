@@ -29,7 +29,7 @@ public class DAO {
 		try {
 			Class.forName(jdbcDriver);
 			
-			conn = DriverManager.getConnection(oracleUrl);
+			conn = DriverManager.getConnection(oracleUrl, connectedId, connectedPwd);
 		}catch(ClassNotFoundException e) {
 			System.out.println("JDBC Driver 로딩 실패");
 		}catch(SQLException e) {
@@ -42,14 +42,14 @@ public class DAO {
 		Properties properties = new Properties();
 		
 		try {
-			String filePath = ClassLoader.getPlatformClassLoader().getResource(resource).getPath();
+			String filePath = ClassLoader.getSystemClassLoader().getResource(resource).getPath();
 			properties.load(new FileInputStream(filePath));
 		
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
 		
-		jdbcDriver = properties.getProperty("diver");
+		jdbcDriver = properties.getProperty("driver");
 		oracleUrl = properties.getProperty("url");
 		connectedId = properties.getProperty("id");
 		connectedPwd = properties.getProperty("password");
