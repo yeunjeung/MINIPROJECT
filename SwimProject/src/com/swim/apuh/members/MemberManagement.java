@@ -145,10 +145,23 @@ public class MemberManagement extends Management{
 //			return;
 //		}
 //		System.out.println(mb);
-	
+	private String inputName() {
+		System.out.println("프로그램 이름 > ");
+		return sc.nextLine();
+	}
 	private void classIn(){
-//		System.out.println("수강 프로그램을 입력하세요.");
-//		String programName = sc.nextLine();
+		//과목이름 선택
+		String programName = inputName();
+		//과목정보검색
+		Program program = pDAO.selectOne(programName);
+		
+		if(program == null) {
+			System.out.println("등록된 프로그램이 아닙니다.");
+			return;
+		}
+		program = //프로그램정보꺼내고
+				//학생정보꺼내서
+		sDAO.insert(studentlist);//<여기다가 넣고싶음..
 //		
 //		Member mb = mDao.selectOne(programName);
 //		

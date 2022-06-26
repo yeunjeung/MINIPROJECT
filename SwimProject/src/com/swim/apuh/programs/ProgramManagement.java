@@ -7,7 +7,6 @@ import com.swim.apuh.Management;
 import com.swim.apuh.Studentlists.Studentlist;
 import com.swim.apuh.Studentlists.StudentlistDAO;
 import com.swim.apuh.members.MemberDAO;
-import com.yedam.java.app.Book;
 
 public class ProgramManagement extends Management{
 	
@@ -107,8 +106,24 @@ public class ProgramManagement extends Management{
 	//과목정보수정
 	private void modiProgram() {
 		//과목이름 선택
+		String programName = inputName();
+		//과목정보검색
+		Program program = pDAO.selectOne(programName);
+		
+		if(program == null) {
+			System.out.println("등록된 프로그램이 아닙니다.");
+			return;
+		}
+		//수정할 정보입력
+		program = inputUpdateProgram(program);
+		//DB에 업데이트
+		pDAO.updateTeacher(program);
 		
 		//
+	}
+	private String inputName() {
+		System.out.println("프로그램 이름 > ");
+		return sc.nextLine();
 	}
 	
 	//모든프로그램조회
@@ -119,7 +134,6 @@ public class ProgramManagement extends Management{
 			System.out.println(program);
 		}
 	}
-	
 	
 	private Program inputUpdateProgram(Program pro) {
 		System.out.println("기존 : " +pro.getProgramTeacher());

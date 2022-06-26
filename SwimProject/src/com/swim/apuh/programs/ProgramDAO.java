@@ -56,11 +56,38 @@ public class ProgramDAO extends DAO{
 //			String sql = "UPDATE swimprograms SET swimprogram_name = ? WHERE "
 //		}
 //	}
+	//단건조회 - 프로그램이름
+	public Program selectOne(String programName) {
+		Program program = null;
+		try {
+			connect();
+			String sql = "SELECT * FROM programs WHERE program_name = ?";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, programName);
+			rs = pstmt.executeQuery();
+		
+			if(rs.next()) {
+				program = new Program();
+				
+				program.setProgramName(rs.getString("program_name"));
+				program.setProgramGrade(rs.getString("program_grade"));
+				program.setProgramTime(rs.getString("program_time"));
+				program.setProgramTeacher(rs.getString("program_teacher"));
+				program.setProgramDay(rs.getInt("program_day"));
+			
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			disconnect();
+		}
+		return program;
+	}
 	//update - 수강선생님변경
 	public void updateTeacher(Program pro) {
 		try {
 			connect();
-			String sql = "UPDATE programs SET swimprogram_teacher = ? WHERE swimprogram_name = ?";
+			String sql = "UPDATE programs SET program_teacher = ? WHERE program_name = ?";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, pro.getProgramTeacher());
 			pstmt.setString(2, pro.getProgramName());

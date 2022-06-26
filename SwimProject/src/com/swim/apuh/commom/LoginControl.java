@@ -3,14 +3,18 @@ package com.swim.apuh.commom;
 import java.util.Scanner;
 
 import com.swim.apuh.Management;
-import com.swim.apuh.user.User;
-import com.swim.apuh.user.UsersDAO;
+import com.swim.apuh.members.Member;
+import com.swim.apuh.members.MemberDAO;
+
+
 
 public class LoginControl {
 
 	private Scanner sc = new Scanner(System.in);
-	private static User loginInfo = null;
-	private static User getLoginInfo() {
+	private static Member loginInfo = null;
+	protected MemberDAO mDAO = MemberDAO.getInstance();
+	private static Member getLoginInfo() {
+		
 		return loginInfo;
 	}
 	public LoginControl() {
@@ -52,21 +56,39 @@ public class LoginControl {
 	}
 	private void login() {
 		// 아이디와 비밀번호 입력
-		User inputInfo = inputUser();
+		Member inputInfo = inputMember();
 		// 로그인 시도
-		loginInfo = UsersDAO.getInstance().selectOne(inputInfo);
+		loginInfo = MemberDAO.getInstance().selectOne(inputInfo);
 		
 		if(loginInfo == null) return;
 		
 		new Management().run();
 	}
 	
-	private User inputUser() {
-		User info = new User();
+	//회원가입
+	public void signUp() {
+		System.out.println("회원가입 > ");
+		
+		Scanner sc = new Scanner(System.in);
+		
 		System.out.println("아이디 > ");
-		info.setUserId(sc.nextLine());
+		String member_id = sc.nextLine();
 		System.out.println("비밀번호 > ");
-		info.setUserPasswrd(sc.nextLine());
+		String member_pwd = sc.nextLine();
+		System.out.println("이름 > ");
+		String member_name = sc.nextLine();
+		
+		Member member = new Member(member_id, member_pwd, member_name);
+		
+		new MemberDAO.().signUp(member);
+	}
+	
+	private Member inputMember() {
+		Member info = new Member();
+		System.out.println("아이디 > ");
+		info.setMemberId(sc.nextLine());
+		System.out.println("비밀번호 > ");
+		info.setMemberPwd(sc.nextLine());
 		return info;
 	}
 }

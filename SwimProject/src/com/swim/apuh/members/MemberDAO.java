@@ -22,7 +22,110 @@ public class MemberDAO extends DAO {
 	}
 	// CRUD
 
-	// 정보등록(insert)
+	
+	//로그인 구현
+	
+	public boolean login(String memberId, String memberPwd) {
+		String sql = "SELECT * FROM Members WHERE member_id = ? and member_pwd =?";
+		try {
+			
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1,  memberId);
+			pstmt.setString(2, memberPwd);
+			
+			rs = pstmt.executeQuery();
+			if(rs.next()) {
+				return true;
+			}return false;
+//				if(rs.getString(1).equals(memberPwd)) {
+//					return 1;	//로그인 성공
+//				}
+//				else {
+//					return 0;	//비밀번호 불일치
+//				}
+//				
+//			}
+//			return -1;	//아이디 없음
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			try {
+				if(rs !=null) {
+					rs.close();
+				}
+				if(pstmt !=null) {
+					pstmt.close();
+				}if(conn !=null) {
+					conn.close();
+				}
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		return false;	//DB오류
+		
+		
+		
+	}
+	
+	//이건 이름뭐라하지.. 아이디확인..?
+	public Member selectOne(Member member) {
+		Member loginInfo = null;
+		try {
+			connect();
+			String sql = "INSERT INTO members WHERE member_id = '" + member.getMemberId() +"'";
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			if(rs.next()) {
+				if(rs.getString("member_pwd").equals(member.getMemberPwd())) {
+					loginInfo = new Member();
+					loginInfo.setMemberId(rs.getString("member_id"));
+					loginInfo.setMemberPwd(rs.getString("member_pwd"));
+				}else {
+					System.out.println("비밀번호가 일치해야 합니다.");
+				}
+			}else {
+				System.out.println("아이디가 존재하지 않습니다.");
+			}
+					
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			disconnect();
+		}
+		return loginInfo;
+	}
+	//회원가입
+	public void Signup(Member member) {
+		try {
+			connect();
+			String sql = "INSERT INTO members VALUES(?,?,?,?,?,?,?)";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, member.getMemberId());
+			pstmt.setString(2, member.getMemberName());
+			pstmt.setString(3, member.getMemberGender());
+			pstmt.setDate(4, member.getMemberBirth());
+			pstmt.setString(5, member.getMemberAddr());
+			pstmt.setInt(6, member.getMemberCall());
+			pstmt.setString(7, member.getMemberPwd());
+
+			int result = pstmt.executeUpdate();
+			if (result > 0) {
+				System.out.println("회원가입이 완료되었습니다.");
+			}else {
+				System.out.println("회원가입에 실패하였습니다.");
+			}
+			
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			disconnect();
+		}
+	}
+	
+	// 정보등록(insert) < 필요할때 걍...쓰던지말던지...
 	public void insert(Member member) {
 		try {
 			connect();
