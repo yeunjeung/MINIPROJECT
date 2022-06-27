@@ -12,7 +12,7 @@ public class MemberManagement extends Management {
 	// 회원정보를 관리하는 프로그램(서브메뉴)
 
 	public MemberManagement(Member info) {
-		this.mb = info;
+		mb = info;
 
 		while (true) {
 			menuPrint();
