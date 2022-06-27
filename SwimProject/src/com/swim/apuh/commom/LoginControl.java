@@ -2,9 +2,9 @@ package com.swim.apuh.commom;
 
 import java.util.Scanner;
 
-import com.swim.apuh.Management;
 import com.swim.apuh.members.Member;
 import com.swim.apuh.members.MemberDAO;
+import com.swim.apuh.members.MemberManagement;
 
 
 
@@ -34,9 +34,9 @@ public class LoginControl {
 	}
 	
 	private void menuPrint() {
-		System.out.println("==============");
-		System.out.println("1. 로그인 2. 종료");
-		System.out.println("==============");
+		System.out.println("===================");
+		System.out.println("1. 로그인 2. 뒤로 가기");
+		System.out.println("===================");
 	}
 	
 	private int menuSelect() {
@@ -49,11 +49,12 @@ public class LoginControl {
 		return menuNo;
 	}
 	private void exit() {
-		System.out.println("시스템을 종료합니다.");
+		System.out.println("메인 메뉴로 돌아갑니다.");
 	}
 	private void showInputError() {
 		System.out.println("메뉴를 확인해주시기 바랍니다.");
 	}
+	//로그인
 	private void login() {
 		// 아이디와 비밀번호 입력
 		Member inputInfo = inputMember();
@@ -62,26 +63,11 @@ public class LoginControl {
 		
 		if(loginInfo == null) return;
 		
-		new Management().run();
+		new MemberManagement(loginInfo);
 	}
 	
-	//회원가입
-	public void signUp() {
-		System.out.println("회원가입 > ");
-		
-		Scanner sc = new Scanner(System.in);
-		
-		System.out.println("아이디 > ");
-		String member_id = sc.nextLine();
-		System.out.println("비밀번호 > ");
-		String member_pwd = sc.nextLine();
-		System.out.println("이름 > ");
-		String member_name = sc.nextLine();
-		
-		Member member = new Member(member_id, member_pwd, member_name);
-		
-		new MemberDAO.().signUp(member);
-	}
+
+
 	
 	private Member inputMember() {
 		Member info = new Member();
@@ -90,5 +76,6 @@ public class LoginControl {
 		System.out.println("비밀번호 > ");
 		info.setMemberPwd(sc.nextLine());
 		return info;
+		
 	}
 }

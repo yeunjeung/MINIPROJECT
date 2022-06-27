@@ -33,7 +33,7 @@ public class ProgramDAO extends DAO{
 			pstmt.setString(2, pro.getProgramGrade());
 			pstmt.setString(3, pro.getProgramTime());
 			pstmt.setString(4, pro.getProgramTeacher());
-			pstmt.setInt(5, pro.getProgramDay());
+			pstmt.setString(5, pro.getProgramDay());
 			
 			int result = pstmt.executeUpdate();
 			
@@ -73,7 +73,7 @@ public class ProgramDAO extends DAO{
 				program.setProgramGrade(rs.getString("program_grade"));
 				program.setProgramTime(rs.getString("program_time"));
 				program.setProgramTeacher(rs.getString("program_teacher"));
-				program.setProgramDay(rs.getInt("program_day"));
+				program.setProgramDay(rs.getString("program_day"));
 			
 			}
 		}catch(SQLException e) {
@@ -126,46 +126,23 @@ public class ProgramDAO extends DAO{
 			disconnect();
 		}
 	}
-//	//프로그램 전체조회
-//	public List<Program> selectAllProgram() {
-//		List<Program>list = pDAO.selectProgram();
-//		try {
-//			connect();
-//			stmt = conn.createStatement();
-//			rs = stmt.executeQuery("SELECT * FROM programs ORDER BY program_name");
-//			
-//			while(rs.next()) {
-//				Program pro = new Program();
-//				pro.setProgramName(rs.getString("program_name"));
-//				pro.setProgramGrade(rs.getString("program_grade"));
-//				pro.setProgramTime(rs.getString("program_time"));
-//				pro.setProgramTeacher(rs.getString("program_teacher"));
-//				pro.setProgramDay(rs.getInt("program_day"));
-//			
-//				list.add(pro);
-//			}
-//		}catch(SQLException e) {
-//			e.printStackTrace();
-//		}finally {
-//			disconnect();
-//		}
-//		return list;
-//	
-//	}
+	//프로그램 전체조회
+
 	public List<Program> selectProgram() {
 		List<Program> list = new ArrayList<>();
 		try {
 			connect();
+			String sql = "SELECT * FROM programs ORDER BY program_name";
 			stmt = conn.createStatement();
-			rs = stmt.executeQuery("SELECT * FROM programs ORDER BY program_name");
+			rs = stmt.executeQuery(sql);
 			
-			while(rs.next()) {
+			if(rs.next()) {
 				Program pro = new Program();
 				pro.setProgramName(rs.getString("program_name"));
 				pro.setProgramGrade(rs.getString("program_grade"));
 				pro.setProgramTime(rs.getString("program_time"));
 				pro.setProgramTeacher(rs.getString("program_teacher"));
-				pro.setProgramDay(rs.getInt("program_day"));
+				pro.setProgramDay(rs.getString("program_day"));
 			
 				list.add(pro);
 			}
@@ -212,7 +189,7 @@ public class ProgramDAO extends DAO{
 		List<Program>list = new ArrayList<>();
 		try {
 			connect();
-			String sql = "SELECT * FROM programs WHERE program_name = " + programGrade;
+			String sql = "SELECT * FROM programs WHERE program_grade = '" + programGrade + "' ORDER BY program_name";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			
@@ -222,7 +199,7 @@ public class ProgramDAO extends DAO{
 			pro.setProgramGrade(rs.getString("program_grade"));
 			pro.setProgramTime(rs.getString("program_time"));
 			pro.setProgramTeacher(rs.getString("program_teacher"));
-			pro.setProgramDay(rs.getInt("program_day"));
+			pro.setProgramDay(rs.getString("program_day"));
 			
 			list.add(pro);
 			}
@@ -249,7 +226,7 @@ public class ProgramDAO extends DAO{
 			pro.setProgramGrade(rs.getString("program_grade"));
 			pro.setProgramTime(rs.getString("program_time"));
 			pro.setProgramTeacher(rs.getString("program_teacher"));
-			pro.setProgramDay(rs.getInt("program_day"));
+			pro.setProgramDay(rs.getString("program_day"));
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();

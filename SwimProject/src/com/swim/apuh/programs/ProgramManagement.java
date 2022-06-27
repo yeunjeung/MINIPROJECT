@@ -3,17 +3,13 @@ package com.swim.apuh.programs;
 import java.util.List;
 import java.util.Scanner;
 
-import com.swim.apuh.Management;
 import com.swim.apuh.Studentlists.Studentlist;
 import com.swim.apuh.Studentlists.StudentlistDAO;
+import com.swim.apuh.commom.Management;
 import com.swim.apuh.members.MemberDAO;
 
 public class ProgramManagement extends Management{
 	
-	private Scanner sc = new Scanner(System.in);
-	private MemberDAO mDao = MemberDAO.getInstance();
-	private ProgramDAO pDao = ProgramDAO.getInstance();
-	private StudentlistDAO sDao = StudentlistDAO.getInstance();
 	//프로그램정보를 관리하는 프로그램(서브메뉴2)
 	
 	public ProgramManagement() {
@@ -77,7 +73,7 @@ public class ProgramManagement extends Management{
 	//과목추가
 	private void addProgram(){
 		Program pro = inputProgram();
-		pDao.insert(pro);
+		pDAO.insert(pro);
 		
 		
 		}
@@ -91,13 +87,13 @@ public class ProgramManagement extends Management{
 		pro.setProgramTime(sc.nextLine());
 		System.out.println("선생님 : ");
 		pro.setProgramTeacher(sc.nextLine());
-		System.out.println("강의 요일 : ");
-		pro.setProgramDay(Integer.parseInt(sc.nextLine()));
+		System.out.println("강의 요일(주5일 or 주3일) : ");
+		pro.setProgramDay(sc.nextLine());
 		//String programDay = sc.nextLine();
 		
-		if(pro.getProgramDay()==0) {
+		if(pro.getProgramDay().equals("주5일")) {
 			System.out.println("매일반");
-		}else if(pro.getProgramDay() == 1){
+		}else if(pro.getProgramDay().equals("주3일")){
 			System.out.println("월수금반");
 		}
 		return pro;
@@ -136,36 +132,46 @@ public class ProgramManagement extends Management{
 	}
 	
 	private Program inputUpdateProgram(Program pro) {
-		System.out.println("기존 : " +pro.getProgramTeacher());
-		System.out.println("수정(수정하지 않을 경우 0) > ");
+		System.out.println("기존 프로그램 선생님 : " +pro.getProgramTeacher());
+		System.out.println("변경할 선생님 이름 : (수정하지 않을 경우 0) > ");
 		String teacher = sc.nextLine();
 		if(!teacher.equals("0")) {
 			pro.setProgramTeacher(teacher);
 		}
 		return pro;
 	}
-	private String inputTeacher() {
-		System.out.println("변경할 강사명 : ");
-		return sc.nextLine();
-	}
+
 	
 	//수강신청내역 전체확인
 	private void selectAll() {
-		List<Studentlist> list = sDao.selectListAll();
-			
-		for(Studentlist sl : list) {
-			System.out.println(sl);
+		List<Studentlist> list = sDAO.selectListAll();
+	
+		for(Studentlist si : list) {
+			System.out.println(si);
 		}
 	}
+	
 	//수강신청내역 단건조회(아이디별)
 	private void selectOneId() {
-
+		String studentlistId = inputId();
+		
+		Studentlist si = sDAO.selectOneProList(studentlistId);
+		
+		if(si == null) {
+			System.out.println("수강 등록된 회원이 아닙니다.");
+			return;
+		}
+		System.out.println(si);
+	}
+	private String inputId() {
+		System.out.println("회원 아이디 입력 > ");
+		return sc.nextLine();
 	}
 	//등급별 전체조회(list)
 	private void selectGrade() {
 		System.out.println("프로그램 등급을 입력하세요.");
 		String studentlistGrade = sc.nextLine();
-		List<Studentlist> list = sDao.selectListGrade(studentlistGrade);
+		List<Studentlist> list = sDAO.selectListGrade(studentlistGrade);
 		
 		for(Studentlist studentlist : list) {
 			System.out.println(studentlist);
@@ -175,7 +181,7 @@ public class ProgramManagement extends Management{
 	private void deleteProgram() {
 		String programName = inputProgramName();
 		
-		pDao.delete(programName);
+		pDAO.delete(programName);
 	}
 	private String inputProgramName() {
 		System.out.println("삭제할 프로그램명 : ");

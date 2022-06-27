@@ -12,14 +12,7 @@ public class Program {
 	private String programGrade;
 	private String programTime;
 	private String programTeacher;
-	private int programDay;
-	
-	
-	
-	
-	
-	
-	
+	private String programDay;
 	
 	
 }

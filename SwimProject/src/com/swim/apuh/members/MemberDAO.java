@@ -25,44 +25,42 @@ public class MemberDAO extends DAO {
 	
 	//로그인 구현
 	
-	public boolean login(String memberId, String memberPwd) {
-		String sql = "SELECT * FROM Members WHERE member_id = ? and member_pwd =?";
+	public Member selelctOne(Member member) {
+		Member loginInfo = null;
 		try {
+			connect();
+			String sql = "SELECT * FROM members WHERE member_id = '" +member.getMemberId()+"'";		
 			
-			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1,  memberId);
-			pstmt.setString(2, memberPwd);
-			
+			stmt = conn.createStatement();
 			rs = pstmt.executeQuery();
 			if(rs.next()) {
-				return true;
-			}return false;
-//				if(rs.getString(1).equals(memberPwd)) {
-//					return 1;	//로그인 성공
-//				}
-//				else {
-//					return 0;	//비밀번호 불일치
-//				}
+
+				if(rs.getString("member_pwd").equals(member.getMemberPwd())) {
+				loginInfo = new Member();
+				loginInfo.setMemberId(rs.getString("member_id"));
+				loginInfo.setMemberPwd(rs.getString("member_pwd"));
+				loginInfo.setMemberName(rs.getString("member_name"));
+				loginInfo.setMemberGender(rs.getString("member_gender"));
+				loginInfo.setMemberBirth(rs.getDate("member_birth"));
+				loginInfo.setMemberAddr(rs.getString("member_addr"));
+				loginInfo.setMemberCall(rs.getString("member_call"));
+					//로그인 성공
+				}
+				else {
+					System.out.println("비밀번호가 일치하지 않습니다.");
+					//return 0;	//비밀번호 불일치
+				}
 //				
-//			}
+			}else {
+				System.out.println("아이디가 존재하지 않습니다.");
+			}
 //			return -1;	//아이디 없음
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
-			try {
-				if(rs !=null) {
-					rs.close();
-				}
-				if(pstmt !=null) {
-					pstmt.close();
-				}if(conn !=null) {
-					conn.close();
-				}
-			}catch(SQLException e) {
-				e.printStackTrace();
-			}
+			disconnect();
 		}
-		return false;	//DB오류
+		return loginInfo;
 		
 		
 		
@@ -73,7 +71,7 @@ public class MemberDAO extends DAO {
 		Member loginInfo = null;
 		try {
 			connect();
-			String sql = "INSERT INTO members WHERE member_id = '" + member.getMemberId() +"'";
+			String sql = "SELECT * FROM members WHERE member_id = '" + member.getMemberId() +"'";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			
@@ -82,6 +80,12 @@ public class MemberDAO extends DAO {
 					loginInfo = new Member();
 					loginInfo.setMemberId(rs.getString("member_id"));
 					loginInfo.setMemberPwd(rs.getString("member_pwd"));
+					loginInfo.setMemberName(rs.getString("member_name"));
+					loginInfo.setMemberGender(rs.getString("member_gender"));
+					loginInfo.setMemberBirth(rs.getDate("member_birth"));
+					loginInfo.setMemberAddr(rs.getString("member_addr"));
+					loginInfo.setMemberCall(rs.getString("member_call"));
+					
 				}else {
 					System.out.println("비밀번호가 일치해야 합니다.");
 				}
@@ -101,15 +105,15 @@ public class MemberDAO extends DAO {
 	public void Signup(Member member) {
 		try {
 			connect();
-			String sql = "INSERT INTO members VALUES(?,?,?,?,?,?,?)";
+			String sql = "INSERT INTO members VALUES(?,?,?,UPPER(?),?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getMemberId());
-			pstmt.setString(2, member.getMemberName());
-			pstmt.setString(3, member.getMemberGender());
-			pstmt.setDate(4, member.getMemberBirth());
-			pstmt.setString(5, member.getMemberAddr());
-			pstmt.setInt(6, member.getMemberCall());
-			pstmt.setString(7, member.getMemberPwd());
+			pstmt.setString(2, member.getMemberPwd());
+			pstmt.setString(3, member.getMemberName());
+			pstmt.setString(4, member.getMemberGender());
+			pstmt.setDate(5, member.getMemberBirth());
+			pstmt.setString(6, member.getMemberAddr());
+			pstmt.setString(7, member.getMemberCall());
 
 			int result = pstmt.executeUpdate();
 			if (result > 0) {
@@ -132,12 +136,12 @@ public class MemberDAO extends DAO {
 			String sql = "INSERT INTO members VALUES(?,?,?,?,?,?,?)";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, member.getMemberId());
-			pstmt.setString(2, member.getMemberName());
-			pstmt.setString(3, member.getMemberGender());
-			pstmt.setDate(4, member.getMemberBirth());
-			pstmt.setString(5, member.getMemberAddr());
-			pstmt.setInt(6, member.getMemberCall());
-			pstmt.setString(7, member.getMemberPwd());
+			pstmt.setString(2, member.getMemberPwd());
+			pstmt.setString(3, member.getMemberName());
+			pstmt.setString(4, member.getMemberGender());
+			pstmt.setDate(5, member.getMemberBirth());
+			pstmt.setString(6, member.getMemberAddr());
+			pstmt.setString(7, member.getMemberCall());
 
 			int result = pstmt.executeUpdate();
 			if (result > 0) {
@@ -181,9 +185,9 @@ public class MemberDAO extends DAO {
 	public void updateCall(Member member) {
 		try {
 			connect();
-			String sql = "UPDATE members SET member_call = ? WHERE member_id = ?";
+			String sql = "UPDATE members SET member_call = ? WHERE member_id = ? ";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setInt(1, member.getMemberCall());
+			pstmt.setString(1, member.getMemberCall());
 			pstmt.setString(2, member.getMemberId());
 
 			int result = pstmt.executeUpdate();
@@ -191,7 +195,7 @@ public class MemberDAO extends DAO {
 			if (result > 0) {
 				System.out.println("전화번호가 수정되었습니다.");
 			} else {
-				System.out.println("정상적으로 ");
+				System.out.println("정상적으로 수정되지 않았습니다.");
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -236,12 +240,12 @@ public class MemberDAO extends DAO {
 			while (rs.next()) {
 				Member mb = new Member();
 				mb.setMemberId(rs.getString("member_id"));
+				mb.setMemberPwd(rs.getString("member_pwd"));
 				mb.setMemberName(rs.getString("member_name"));
 				mb.setMemberGender(rs.getString("member_gender"));
 				mb.setMemberBirth(rs.getDate("member_birth"));
 				mb.setMemberAddr(rs.getString("member_addr"));
-				mb.setMemberCall(rs.getInt("member_call"));
-				mb.setMemberPwd(rs.getString("member_pwd"));
+				mb.setMemberCall(rs.getString("member_call"));
 			}
 
 		} catch (SQLException e) {
@@ -257,18 +261,18 @@ public class MemberDAO extends DAO {
 		Member mb = null; // <null : 없는회원
 		try {
 			connect();
-			String sql = "SELECT * FROM member WHERE member_id = " + memberId;
+			String sql = "SELECT * FROM members WHERE member_id = '" + memberId +"'";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			while (rs.next()) {
 				mb = new Member();
 				mb.setMemberId(rs.getString("member_id"));
+				mb.setMemberPwd(rs.getString("member_pwd"));
 				mb.setMemberName(rs.getString("member_name"));
 				mb.setMemberGender(rs.getString("member_gender"));
 				mb.setMemberBirth(rs.getDate("member_birth"));
 				mb.setMemberAddr(rs.getString("member_addr"));
-				mb.setMemberCall(rs.getInt("member_call"));
-				mb.setMemberPwd(rs.getString("member_pwd"));
+				mb.setMemberCall(rs.getString("member_call"));
 			}
 
 		} catch (SQLException e) {

@@ -25,14 +25,14 @@ public class StudentlistDAO extends DAO{
 	public void insertStudentlist(Studentlist si) {
 		try {
 			connect();
-			String sql = "INSERT INTO members VALUES(?,?,?,?,?,?)";
+			String sql = "INSERT INTO studentlists VALUES(?,?,?,?,?,?) ";
 			pstmt = conn.prepareStatement(sql);
 			pstmt.setString(1, si.getStudentlistId());
-			pstmt.setString(2, si.getStudentlistGrade());
-			pstmt.setString(3, si.getStudentlistTime());
-			pstmt.setString(4, si.getStudentlistTeacher());
-			pstmt.setInt(5, si.getStudentlistDay());
-			
+			pstmt.setString(2, si.getStudentlistProname());
+			pstmt.setString(3, si.getStudentlistGrade());
+			pstmt.setString(4, si.getStudentlistTime());
+			pstmt.setString(5, si.getStudentlistTeacher());
+			pstmt.setString(6, si.getStudentlistDay());
 			
 			
 			int result = pstmt.executeUpdate();
@@ -58,16 +58,17 @@ public class StudentlistDAO extends DAO{
 //					"SELECT m.member_id, p.program_name, p.program_grade, p.program_time, p.program_teacher, p.program_day"
 //				+ " FROM members m JOIN programs p"
 //					+ " ON (m.member_id BETWEEN p.program_name AND p.program_grade)";
-		pstmt = conn.prepareStatement(sql);
-		rs = pstmt.executeQuery();
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
 		
-		while(rs.next()) {
+			while(rs.next()) {
 			Studentlist si = new Studentlist();
 			si.setStudentlistId(rs.getString("studentlist_id"));
-			si.setStudentlistId(rs.getString("studentlist_grade"));
+			si.setStudentlistProname(rs.getString("studentlist_proname"));
+			si.setStudentlistGrade(rs.getString("studentlist_grade"));
 			si.setStudentlistTime(rs.getString("studentlist_time"));
-			si.setStudentlistTeacher(rs.getString("tudentlist_teacher"));
-			si.setStudentlistDay(rs.getInt("studentlist_day"));
+			si.setStudentlistTeacher(rs.getString("studentlist_teacher"));
+			si.setStudentlistDay(rs.getString("studentlist_day"));
 			list.add(si);
 		}
 		
@@ -78,29 +79,57 @@ public class StudentlistDAO extends DAO{
 	}
 		return list;
 	}
-	//수강신청내역단건조회 	<sql 아닌거같음..ㅜ어케할지모르겟
-	public Studentlist selectOneList(String studentlistId) {
-		Studentlist si = null;
+	//수강신청내역단건조회(Program) 	<sql 아닌거같음..ㅜ어케할지모르겟 < 수정완^_^
+	public Studentlist selectOneProList(String studentlistId) {
+		Studentlist search = null;
 		try {
 			connect();
-			String sql = "SELECT *FROM studentlists WHERE studentlist_id = " + studentlistId;
+			String sql = "SELECT * FROM studentlists WHERE studentlist_id = '" + studentlistId +"'";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
-			while(rs.next()) {
+			if(rs.next()) {
 				
-			si = new Studentlist();
-			si.setStudentlistId(rs.getString("studentlist_id"));
-			si.setStudentlistId(rs.getString("studentlist_grade"));
-			si.setStudentlistTime(rs.getString("studentlist_time"));
-			si.setStudentlistTeacher(rs.getString("tudentlist_teacher"));
-			si.setStudentlistDay(rs.getInt("studentlist_day"));
+			search = new Studentlist();
+			search.setStudentlistId(rs.getString("studentlist_id"));
+			search.setStudentlistProname(rs.getString("studentlist_proname"));
+			search.setStudentlistGrade(rs.getString("studentlist_grade"));
+			search.setStudentlistTime(rs.getString("studentlist_time"));
+			search.setStudentlistTeacher(rs.getString("studentlist_teacher"));
+			search.setStudentlistDay(rs.getString("studentlist_day"));
+			
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
 			disconnect();
 		}
-		return si;
+		return search;
+	}
+	//수강신청단건조회(Member)
+	public Studentlist selectOneMbList(Studentlist si) {
+		Studentlist search = null;
+		try {
+			connect();
+			String sql = "SELECT * FROM studentlists WHERE studentlist_id = '" + si.getStudentlistId() + "' AND studentlist_proname = '" + si.getStudentlistProname()+"'";
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			if(rs.next()) {
+				
+			search = new Studentlist();
+			search.setStudentlistId(rs.getString("studentlist_id"));
+			search.setStudentlistProname(rs.getString("studentlist_proname"));
+			search.setStudentlistGrade(rs.getString("studentlist_grade"));
+			search.setStudentlistTime(rs.getString("studentlist_time"));
+			search.setStudentlistTeacher(rs.getString("studentlist_teacher"));
+			search.setStudentlistDay(rs.getString("studentlist_day"));
+			
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			disconnect();
+		}
+		return search;
 	}
 	
 	//신청내역을 조건:등급에 따라 조회하기 list
@@ -108,17 +137,19 @@ public class StudentlistDAO extends DAO{
 		List<Studentlist> list = new ArrayList<>();
 		try {
 			connect();
-			String sql = "SELECT * FROM studentlists WHERE studentlist_grade " + studentlistGrade;
+			String sql = "SELECT * FROM studentlists WHERE studentlist_grade = '" + studentlistGrade +"'";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			
 			while(rs.next()) {
 			Studentlist sl = new Studentlist();
 			sl.setStudentlistId(rs.getString("studentlist_id"));
+			sl.setStudentlistProname(rs.getString("studentlist_proname"));
 			sl.setStudentlistGrade(rs.getString("studentlist_grade"));
-			sl.setStudentlistTime(rs.getString("studentlist_grade"));
+			sl.setStudentlistTime(rs.getString("studentlist_time"));
 			sl.setStudentlistTeacher(rs.getString("studentlist_teacher"));
-			sl.setStudentlistDay(rs.getInt("studentlist_day"));
+			sl.setStudentlistDay(rs.getString("studentlist_day"));
+			list.add(sl);
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();

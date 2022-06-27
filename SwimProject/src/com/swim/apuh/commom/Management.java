@@ -1,4 +1,4 @@
-package com.swim.apuh;
+package com.swim.apuh.commom;
 
 import java.sql.Date;
 import java.util.Scanner;
@@ -13,10 +13,10 @@ import com.swim.apuh.programs.ProgramManagement;
 //서브프로그램
 public class Management {
 
-	private Scanner sc = new Scanner(System.in);
+	protected Scanner sc = new Scanner(System.in);
 	protected ProgramDAO pDAO = ProgramDAO.getInstance();
 	protected MemberDAO mDAO = MemberDAO.getInstance();
-	private StudentlistDAO sDAO = StudentlistDAO.getInstance();
+	protected StudentlistDAO sDAO = StudentlistDAO.getInstance();
 	
 	public void run() {
 		
@@ -27,15 +27,14 @@ public class Management {
 			
 			if(menuNo == 1) {
 				//로그인
-			}else if(menuNo ==2) {
-				//회원
-				new MemberManagement();
-			}else if(menuNo ==3) {
-				//관리자
-				new ProgramManagement();
-			}else if(menuNo == 4) {
+				new LoginControl();
+		
+			}else if(menuNo == 2) {
 				//회원가입
 				insert();
+			}else if(menuNo == 3) {
+				//관리자
+				new ProgramManagement();
 			}else if(menuNo == 9) {
 				//시스템 종료
 				exit();
@@ -57,6 +56,8 @@ public class Management {
 		member.setMemberId(sc.nextLine());
 		System.out.println("비밀번호 > ");
 		member.setMemberPwd(sc.nextLine());
+		System.out.println("이름 > ");
+		member.setMemberName(sc.nextLine());
 		System.out.println("성별 > ");
 		member.setMemberGender(sc.nextLine());
 		System.out.println("생년월일(yyyy-mm-dd)");
@@ -64,13 +65,13 @@ public class Management {
 		System.out.println("주소 > ");
 		member.setMemberAddr(sc.nextLine());
 		System.out.println("전화번호 > ");
-		member.setMemberCall(Integer.parseInt(sc.nextLine()));
+		member.setMemberCall(sc.nextLine());
 		return member;
 	}
 	protected void menuPrint() {
-		System.out.println("===============================");
-		System.out.println("1. 로그인(구현 ㄴ) 2.회원 3.관리자 4.회원가입 9.시스템 종료");
-		System.out.println("===============================");
+		System.out.println("===================================");
+		System.out.println(" 1. 로그인 2.회원가입 3.관리자 9.시스템 종료");
+		System.out.println("===================================");
 	}
 	protected int menuSelect() {
 		int menuNo = 0;
