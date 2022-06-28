@@ -95,6 +95,26 @@ public class TeacherDAO extends DAO {
 			}finally {
 				disconnect();
 			}
+			//강사목록에서 삭제되면 수강신청내역에서도 삭제하기
+			try {
+				connect();
+				String sql = "DELETE FROM studentlists WHERE studentlist_teacher = ? ";
+				pstmt = conn.prepareStatement(sql);
+				pstmt.setString(1, teacherName);
+				
+				int result = pstmt.executeUpdate();
+				
+				if(result > 0) {
+					System.out.println("수강신청한 회원들을 삭제하였습니다.");
+				}else {
+					System.out.println("수강신청한 회원이 없습니다.");
+				}
+							
+			}catch(SQLException e) {
+				e.printStackTrace();
+			}finally {
+				disconnect();
+			}
 			
 		}
 		//강사 전체조회

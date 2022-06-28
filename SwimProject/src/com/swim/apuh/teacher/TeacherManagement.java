@@ -40,7 +40,7 @@ public class TeacherManagement extends Management{
 	}
 	
 	protected void menuPrint() {
-		System.out.println("================================================================");
+		System.out.println("===============================================================");
 		System.out.println("1.강사추가 2.강사전체조회 3.이름별 강사조회 4.전공별 강사조회 5.강사삭제 9.뒤로 가기");
 		System.out.println("===============================================================");
 		
