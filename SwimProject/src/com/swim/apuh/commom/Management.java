@@ -6,9 +6,10 @@ import java.util.Scanner;
 import com.swim.apuh.Studentlists.StudentlistDAO;
 import com.swim.apuh.members.Member;
 import com.swim.apuh.members.MemberDAO;
-import com.swim.apuh.members.MemberManagement;
 import com.swim.apuh.programs.ProgramDAO;
 import com.swim.apuh.programs.ProgramManagement;
+import com.swim.apuh.teacher.TeacherDAO;
+import com.swim.apuh.teacher.TeacherManagement;
 
 //서브프로그램
 public class Management {
@@ -17,7 +18,7 @@ public class Management {
 	protected ProgramDAO pDAO = ProgramDAO.getInstance();
 	protected MemberDAO mDAO = MemberDAO.getInstance();
 	protected StudentlistDAO sDAO = StudentlistDAO.getInstance();
-	
+	protected TeacherDAO tDAO = TeacherDAO.getInstance();
 	public void run() {
 		
 		while (true) {
@@ -33,8 +34,12 @@ public class Management {
 				//회원가입
 				insert();
 			}else if(menuNo == 3) {
-				//관리자
+				//프로그램관리자
 				new ProgramManagement();
+			}else if(menuNo == 4) {
+				//강사관리자
+				new TeacherManagement();
+				
 			}else if(menuNo == 9) {
 				//시스템 종료
 				exit();
@@ -52,6 +57,7 @@ public class Management {
 	}
 	private Member inputAll() {
 		Member member = new Member();
+		try {
 		System.out.println("아이디> ");
 		member.setMemberId(sc.nextLine());
 		System.out.println("비밀번호 > ");
@@ -66,12 +72,16 @@ public class Management {
 		member.setMemberAddr(sc.nextLine());
 		System.out.println("전화번호 > ");
 		member.setMemberCall(sc.nextLine());
+		
+		}catch(IllegalArgumentException e) {
+			System.out.println("양식에 맞게 입력하세요.");
+		}
 		return member;
 	}
 	protected void menuPrint() {
-		System.out.println("===================================");
-		System.out.println(" 1. 로그인 2.회원가입 3.관리자 9.시스템 종료");
-		System.out.println("===================================");
+		System.out.println("===================================================");
+		System.out.println(" 1. 로그인 2.회원가입 3.프로그램관리자 4.강사관리자 9.시스템 종료");
+		System.out.println("===================================================");
 	}
 	protected int menuSelect() {
 		int menuNo = 0;

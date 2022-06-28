@@ -6,8 +6,6 @@ import com.swim.apuh.members.Member;
 import com.swim.apuh.members.MemberDAO;
 import com.swim.apuh.members.MemberManagement;
 
-
-
 public class LoginControl {
 
 	private Scanner sc = new Scanner(System.in);

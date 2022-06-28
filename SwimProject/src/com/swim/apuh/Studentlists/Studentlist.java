@@ -9,11 +9,11 @@ import lombok.ToString;
 @ToString
 public class Studentlist {
 	private String studentlistId;
+	private String studentlistProname;
 	private String studentlistGrade;
 	private String studentlistTime;
 	private String studentlistTeacher;
 	private String studentlistDay;
-	private String studentlistProname;
 	
 	
 	

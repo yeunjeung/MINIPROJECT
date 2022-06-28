@@ -76,7 +76,12 @@ public class MemberDAO extends DAO {
 			rs = stmt.executeQuery(sql);
 			
 			if(rs.next()) {
+				//아이디 존재
 				if(rs.getString("member_pwd").equals(member.getMemberPwd())) {
+					// 패스워드와 입력된 패스워드가 같은지 확인
+					// 비밀번호일치
+					// -> 로그인 성공
+					
 					loginInfo = new Member();
 					loginInfo.setMemberId(rs.getString("member_id"));
 					loginInfo.setMemberPwd(rs.getString("member_pwd"));

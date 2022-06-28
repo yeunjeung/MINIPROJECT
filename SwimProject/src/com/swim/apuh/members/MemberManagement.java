@@ -9,8 +9,8 @@ import com.swim.apuh.programs.Program;
 public class MemberManagement extends Management {
 
 	private static Member mb = null;
+	
 	// 회원정보를 관리하는 프로그램(서브메뉴)
-
 	public MemberManagement(Member info) {
 		mb = info;
 
@@ -105,10 +105,7 @@ public class MemberManagement extends Management {
 		return mb;
 	}
 
-//	private String inputId() {
-//		System.out.println("아이디 > ");
-//		return sc.nextLine();
-//	}
+
 	private void classAll() {
 		List<Program> list = pDAO.selectProgram();
 
@@ -128,10 +125,7 @@ public class MemberManagement extends Management {
 		}
 	}
 
-//	private String inputName() {
-//		System.out.println("프로그램 이름 > ");
-//		return sc.nextLine();
-//	}
+	//수강신청
 	private void classIn() {
 		// 과목이름 입력
 		System.out.println("신청할 과목이름을 입력하세요.");
@@ -141,7 +135,6 @@ public class MemberManagement extends Management {
 		// 없는 과목이라면 안내
 		if (pro == null) {
 			System.out.println("없는 과목입니다.");
-			// 이미 수강중인 과목이라면 안내
 			return;
 		}
 		// 중복신청을 방지하기위해 -> 회원아이디와 프로그램네임을
@@ -149,10 +142,11 @@ public class MemberManagement extends Management {
 		temp.setStudentlistId(mb.getMemberId()); //아이디가져와서
 		temp.setStudentlistProname(programName);//프로그램네임가져오고
 		Studentlist info = sDAO.selectOneMbList(temp);//info에 정보담기
+		// 이미 수강중인 과목이라면 안내
 		if (info != null) {
 			System.out.println("이미 신청한 과목입니다.");
 		} else {
-			// 있다면 수강내역에 추가하기
+			// 아니라면 수강내역에 추가하기
 			info = new Studentlist();
 			info.setStudentlistId(mb.getMemberId());
 			info.setStudentlistProname(pro.getProgramName());
@@ -165,15 +159,14 @@ public class MemberManagement extends Management {
 		}
 	}
 
+	//수강취소
 	private void classOut() {
 		System.out.println("수강취소할 과목이름을 입력하세요.");
-//		String studentlistProname = sc.nextLine();
-//		Studentlist si = sDAO.selectOneList(si.getStudentlistProname());
 
 		Studentlist sii = new Studentlist();// sii라는 보따리에 담는것
 		sii.setStudentlistId(mb.getMemberId());
+		
 		// 과목입력받고
-
 		sii.setStudentlistProname(sc.nextLine());// DAO에서 쿼리문에 써준 아이디, 프로그램이름담기
 		// 수강중인 과목인지 확인
 		Studentlist si = sDAO.selectOneMbList(sii); // DAO의 si 에다가 넘겨주면 거기서 풀어서 볼것임!

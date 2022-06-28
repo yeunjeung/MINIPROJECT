@@ -7,6 +7,7 @@ import com.swim.apuh.Studentlists.Studentlist;
 import com.swim.apuh.Studentlists.StudentlistDAO;
 import com.swim.apuh.commom.Management;
 import com.swim.apuh.members.MemberDAO;
+import com.swim.apuh.teacher.Teacher;
 
 public class ProgramManagement extends Management{
 	
@@ -37,6 +38,9 @@ public class ProgramManagement extends Management{
 				//등급별 전체조회(list)
 				selectGrade();
 			}else if(menuNo == 7) {
+				//강사전체조회
+				selectAllTeacher();
+			}else if(menuNo == 8) {
 				//과목삭제
 				deleteProgram();
 			}else if(menuNo == 9) {
@@ -50,9 +54,9 @@ public class ProgramManagement extends Management{
 	}
 	
 	protected void menuPrint() {
-		System.out.println("========================================================================================");
-		System.out.println("1.과목추가 2.과목정보수정 3.모든프로그램 조회 4. 수강신청내역 전체조회 5.수강신청회원별조회 6. 수강신청 등급별 조회 7.과목삭제 9. 뒤로가기");
-		System.out.println("========================================================================================");
+		System.out.println("=======================================================================================================");
+		System.out.println("1.과목추가 2.과목정보수정 3.모든프로그램 조회 4. 수강신청내역 전체조회 5.수강신청회원별조회 6. 수강신청 등급별 조회 7.강사조회 8.과목삭제 9. 뒤로가기");
+		System.out.println("=======================================================================================================");
 		
 	}
 	private int selectMenu() {
@@ -89,7 +93,6 @@ public class ProgramManagement extends Management{
 		pro.setProgramTeacher(sc.nextLine());
 		System.out.println("강의 요일(주5일 or 주3일) : ");
 		pro.setProgramDay(sc.nextLine());
-		//String programDay = sc.nextLine();
 		
 		if(pro.getProgramDay().equals("주5일")) {
 			System.out.println("매일반");
@@ -106,12 +109,18 @@ public class ProgramManagement extends Management{
 		//과목정보검색
 		Program program = pDAO.selectOne(programName);
 		
+		//강사정보검색
+		//Teacher teacher = tDAO.selectOne(teacherName);
 		if(program == null) {
 			System.out.println("등록된 프로그램이 아닙니다.");
 			return;
 		}
+		
+		
 		//수정할 정보입력
 		program = inputUpdateProgram(program);
+		
+		
 		//DB에 업데이트
 		pDAO.updateTeacher(program);
 		
@@ -119,6 +128,11 @@ public class ProgramManagement extends Management{
 	}
 	private String inputName() {
 		System.out.println("프로그램 이름 > ");
+		return sc.nextLine();
+	}
+	
+	private String inputTeacherName() {
+		System.out.println("강사 이름 > ");
 		return sc.nextLine();
 	}
 	
@@ -132,14 +146,25 @@ public class ProgramManagement extends Management{
 	}
 	
 	private Program inputUpdateProgram(Program pro) {
-		System.out.println("기존 프로그램 선생님 : " +pro.getProgramTeacher());
+			
+		System.out.println("기존 프로그램 이름 : " +pro.getProgramTeacher());
 		System.out.println("변경할 선생님 이름 : (수정하지 않을 경우 0) > ");
 		String teacher = sc.nextLine();
 		if(!teacher.equals("0")) {
 			pro.setProgramTeacher(teacher);
 		}
 		return pro;
-	}
+		}
+//	}
+//		//선생님 선택
+//		String teacherName = inputTeacherName();
+//		//선생님 정보선택
+//		Teacher teacher = tDAO.selectOne(teacherName);
+//		
+//		if(teacher == null) {
+//			System.out.println("등록된 선생님이 아닙니다.");
+//		}
+//		
 
 	
 	//수강신청내역 전체확인
@@ -187,6 +212,13 @@ public class ProgramManagement extends Management{
 		System.out.println("삭제할 프로그램명 : ");
 		return sc.nextLine();
 	}
-
-
+	//모든강사조회
+		private void selectAllTeacher() {
+			List<Teacher> list = tDAO.selectTeacher();
+			
+			for(Teacher teacher : list) {
+				System.out.println(teacher);
+			}
+		}
+	
 }

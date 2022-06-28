@@ -6,6 +6,7 @@ import java.util.List;
 
 import com.swim.apuh.Studentlists.Studentlist;
 import com.swim.apuh.commom.DAO;
+import com.swim.apuh.teacher.Teacher;
 
 public class ProgramDAO extends DAO{
 
@@ -49,13 +50,7 @@ public class ProgramDAO extends DAO{
 			disconnect();
 		}
 	}
-//	//update - 수강이름
-//	public void updateName(Swimprogram sp) {
-//		try {
-//			connect();
-//			String sql = "UPDATE swimprograms SET swimprogram_name = ? WHERE "
-//		}
-//	}
+
 	//단건조회 - 프로그램이름
 	public Program selectOne(String programName) {
 		Program program = null;
@@ -106,12 +101,12 @@ public class ProgramDAO extends DAO{
 		}
 	}
 	//delete 강의 삭제
-	public void delete(String swimprogramName) {
+	public void delete(String programName) {
 		try {
 			connect();
 			String sql = "DELETE FROM programs WHERE program_name = ? ";
 			pstmt = conn.prepareStatement(sql);
-			pstmt.setString(1, swimprogramName);
+			pstmt.setString(1, programName);
 			
 			int result = pstmt.executeUpdate();
 			
@@ -120,6 +115,27 @@ public class ProgramDAO extends DAO{
 			}else {
 				System.out.println("정상적으로 삭제되지 않았습니다.");
 			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			disconnect();
+		}
+	
+		//프로그램에서 삭제되면 수강신청내역에서도 삭제하기
+		try {
+			connect();
+			String sql = "DELETE FROM studentlists WHERE studentlist_proname = ? ";
+			pstmt = conn.prepareStatement(sql);
+			pstmt.setString(1, programName);
+			
+			int result = pstmt.executeUpdate();
+			
+			if(result > 0) {
+				System.out.println("수강신청한 회원들을 삭제하였습니다.");
+			}else {
+				System.out.println("수강신청한 회원이 없습니다.");
+			}
+						
 		}catch(SQLException e) {
 			e.printStackTrace();
 		}finally {
@@ -136,7 +152,7 @@ public class ProgramDAO extends DAO{
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			
-			if(rs.next()) {
+			while(rs.next()) {
 				Program pro = new Program();
 				pro.setProgramName(rs.getString("program_name"));
 				pro.setProgramGrade(rs.getString("program_grade"));
@@ -154,7 +170,7 @@ public class ProgramDAO extends DAO{
 		return list;
 	}
 
-//	//수강내역전체조회<<개노답; 프로그램에 담아하나 sl에 담아야하나..
+//	//수강내역전체조회<<노답; 프로그램에 담아하나 sl에 담아야하나..<sl에 담아야하는것이었음..^_^
 //	public List<Program> selectAll(){
 //		List<Program> list = new ArrayList<Program>();
 //		
@@ -211,12 +227,13 @@ public class ProgramDAO extends DAO{
 		}
 	return list;
 	}
-	//조건전체조회 - DAY에 따라
+	
+	//조건전체조회 - DAY에 따라 << 구현안햇슴ㅎㅎ
 	public List<Program> selectDay(String programDay) {
 		List<Program> list = new ArrayList<>();
 		try {
 			connect();
-			String sql = "SELECT * FROM programs WHERE program_day = " + programDay;
+			String sql = "SELECT * FROM programs WHERE program_day = " + programDay+ "' ORDER BY program_name";
 			stmt = conn.createStatement();
 			rs = stmt.executeQuery(sql);
 			
@@ -227,6 +244,8 @@ public class ProgramDAO extends DAO{
 			pro.setProgramTime(rs.getString("program_time"));
 			pro.setProgramTeacher(rs.getString("program_teacher"));
 			pro.setProgramDay(rs.getString("program_day"));
+			
+			list.add(pro);
 			}
 		}catch(SQLException e) {
 			e.printStackTrace();
@@ -235,6 +254,32 @@ public class ProgramDAO extends DAO{
 		}
 	return list;
 	}
-	
+	//강사전체조회 < teacherDAO에서 가져옴^-^
+	public List<Teacher> selectTeacher(){
+		List<Teacher> list = new ArrayList<>();
+		try {
+			connect();
+			String sql = "SELECT * FROM teachers ORDER BY teacher_name";
+			stmt = conn.createStatement();
+			rs = stmt.executeQuery(sql);
+			
+			while(rs.next()) {
+				Teacher tc = new Teacher();
+				tc.setTeacherName(rs.getString("teacher_name"));
+				tc.setTeacherAge(rs.getString("teacher_age"));
+				tc.setTeacherGender(rs.getString("teacher_gender"));
+				tc.setTeacherCall(rs.getString("teacher_call"));
+				tc.setTeacherAddr(rs.getString("teacher_addr"));
+				tc.setTeacherMajor(rs.getString("teacher_major"));
+			
+				list.add(tc);
+			}
+		}catch(SQLException e) {
+			e.printStackTrace();
+		}finally {
+			disconnect();
+		}
+		return list;
+	}
 	
 }
