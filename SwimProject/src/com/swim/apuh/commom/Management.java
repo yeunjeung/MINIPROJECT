@@ -79,9 +79,9 @@ public class Management {
 		return member;
 	}
 	protected void menuPrint() {
-		System.out.println("===================================================");
+		System.out.println("=================================================================");
 		System.out.println(" 1. 로그인 2.회원가입 3.프로그램관리자 4.강사관리자 9.시스템 종료");
-		System.out.println("===================================================");
+		System.out.println("=================================================================");
 	}
 	protected int menuSelect() {
 		int menuNo = 0;

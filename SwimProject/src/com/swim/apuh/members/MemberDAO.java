@@ -23,49 +23,49 @@ public class MemberDAO extends DAO {
 	// CRUD
 
 	
+	
+//	
+//	public Member selelctOne(Member member) {
+//		Member loginInfo = null;
+//		try {
+//			connect();
+//			String sql = "SELECT * FROM members WHERE member_id = '" +member.getMemberId()+"'";		
+//			
+//			stmt = conn.createStatement();
+//			rs = pstmt.executeQuery();
+//			if(rs.next()) {
+//
+//				if(rs.getString("member_pwd").equals(member.getMemberPwd())) {
+//				loginInfo = new Member();
+//				loginInfo.setMemberId(rs.getString("member_id"));
+//				loginInfo.setMemberPwd(rs.getString("member_pwd"));
+//				loginInfo.setMemberName(rs.getString("member_name"));
+//				loginInfo.setMemberGender(rs.getString("member_gender"));
+//				loginInfo.setMemberBirth(rs.getDate("member_birth"));
+//				loginInfo.setMemberAddr(rs.getString("member_addr"));
+//				loginInfo.setMemberCall(rs.getString("member_call"));
+//					//로그인 성공
+//				}
+//				else {
+//					System.out.println("비밀번호가 일치하지 않습니다.");
+//					//return 0;	//비밀번호 불일치
+//				}
+////				
+//			}else {
+//				System.out.println("아이디가 존재하지 않습니다.");
+//			}
+////			return -1;	//아이디 없음
+//		}catch(SQLException e) {
+//			e.printStackTrace();
+//		}finally {
+//			disconnect();
+//		}
+//		return loginInfo;
+//		
+//		
+//		
+//	}
 	//로그인 구현
-	
-	public Member selelctOne(Member member) {
-		Member loginInfo = null;
-		try {
-			connect();
-			String sql = "SELECT * FROM members WHERE member_id = '" +member.getMemberId()+"'";		
-			
-			stmt = conn.createStatement();
-			rs = pstmt.executeQuery();
-			if(rs.next()) {
-
-				if(rs.getString("member_pwd").equals(member.getMemberPwd())) {
-				loginInfo = new Member();
-				loginInfo.setMemberId(rs.getString("member_id"));
-				loginInfo.setMemberPwd(rs.getString("member_pwd"));
-				loginInfo.setMemberName(rs.getString("member_name"));
-				loginInfo.setMemberGender(rs.getString("member_gender"));
-				loginInfo.setMemberBirth(rs.getDate("member_birth"));
-				loginInfo.setMemberAddr(rs.getString("member_addr"));
-				loginInfo.setMemberCall(rs.getString("member_call"));
-					//로그인 성공
-				}
-				else {
-					System.out.println("비밀번호가 일치하지 않습니다.");
-					//return 0;	//비밀번호 불일치
-				}
-//				
-			}else {
-				System.out.println("아이디가 존재하지 않습니다.");
-			}
-//			return -1;	//아이디 없음
-		}catch(SQLException e) {
-			e.printStackTrace();
-		}finally {
-			disconnect();
-		}
-		return loginInfo;
-		
-		
-		
-	}
-	
 	//이건 이름뭐라하지.. 아이디확인..?
 	public Member selectOne(Member member) {
 		Member loginInfo = null;

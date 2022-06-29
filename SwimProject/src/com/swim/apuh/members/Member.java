@@ -7,7 +7,7 @@ import lombok.Setter;
 import lombok.ToString;
 @Getter
 @Setter
-@ToString
+
 public class Member {
 
 	private String memberId;
@@ -17,6 +17,17 @@ public class Member {
 	private Date memberBirth;
 	private String memberAddr;
 	private String memberCall;
-	
+	@Override
+	public String toString() {
+		return "아이디 : " + memberId +
+				", 패스워드 : " + memberPwd+
+				", 이름 : " + memberGender+
+				", 성별 : " + memberBirth+
+				", 생년월일 : " + memberAddr+
+				", 주소 : " + memberAddr+
+				", 전화번호 : " + memberCall;
+				
+	}
+
 	
 }

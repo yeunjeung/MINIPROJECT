@@ -13,19 +13,20 @@ import java.util.Properties;
 public class DAO {
 
 
+	//oracle연결정보
+	String jdbcDriver = "oracle.jdbc.driver.OracleDriver";
+	String oracleUrl = "jdbc:oracle:thin:@localhost:1521:xe";
+	String connectedId = "yj";
+	String connectedPwd = "yj";
 	
-	private String jdbcDriver;
-	private String oracleUrl;
-	private String connectedId;
-	private String connectedPwd;
-	
+	//각 메소드에서 공통적으로 사용하는 필드
 	protected Connection conn;
 	protected Statement stmt;
 	protected PreparedStatement pstmt;
 	protected ResultSet rs;
 	
 	public void connect() {
-		dbConfig();
+		//dbConfig();
 		try {
 			Class.forName(jdbcDriver);
 			
@@ -49,10 +50,12 @@ public class DAO {
 			e.printStackTrace();
 		}
 		
-		jdbcDriver = properties.getProperty("driver");
-		oracleUrl = properties.getProperty("url");
-		connectedId = properties.getProperty("id");
-		connectedPwd = properties.getProperty("password");
+//		jdbcDriver = properties.getProperty("driver");
+//		oracleUrl = properties.getProperty("url");
+//		connectedId = properties.getProperty("id");
+//		connectedPwd = properties.getProperty("password");
+	
+		
 	}
 	
 	public void disconnect() {

@@ -37,8 +37,11 @@ public class MemberManagement extends Management {
 			} else if (menuNo == 6) {
 				// 6.수강취소
 				classOut();
+			}	else if (menuNo == 7) {	
+				//7.나의수강내역조회
+				selectMylist();
 			} else if (menuNo == 9) {
-				// 7.뒤로가기
+				// 9.뒤로가기
 				back();
 				break;
 			} else {
@@ -49,11 +52,9 @@ public class MemberManagement extends Management {
 	}
 
 	protected void menuPrint() {
-		System.out
-				.println("===========================================================================================");
-		System.out.println("1. 나의 정보 2. 나의 정보 수정 3. 수강가능 프로그램 정보 4. 등급별 프로그램 조회 5. 수강신청 6. 수강취소 9. 뒤로 가기");
-		System.out
-				.println("===========================================================================================");
+		System.out.println("===========================================================================================================================");
+		System.out.println("1. 나의 정보 2. 나의 정보 수정 3. 수강가능 프로그램 정보 4. 등급별 프로그램 조회 5. 수강신청 6. 수강취소 7.나의수강내역 9. 뒤로 가기");
+		System.out.println("===========================================================================================================================");
 	}
 
 	private int selectMenu() {
@@ -115,6 +116,21 @@ public class MemberManagement extends Management {
 
 	}
 
+	//수강신청내역 단건조회(아이디별)
+	//나의 수강신청내역보기
+	private void selectMylist() {
+		String studentlistId = mb.getMemberId();
+		
+		Studentlist si = sDAO.selectOneProList(studentlistId);
+		
+		if(si == null) {
+			System.out.println("수강신청내역이 없습니다.");
+			return;
+		}
+		
+		System.out.println(si);
+	}
+	
 	private void classGrade() {
 		System.out.println("프로그램 등급을 입력하세요");
 		String programGrade = sc.nextLine();
